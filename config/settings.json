@@ -1,0 +1,47 @@
+{
+  "stocks": [
+    {
+      "code": "002364",
+      "name": "中恒电气",
+      "quantity": 900,
+      "cost_price": 33.3125,
+      "is_holding": true
+    },
+    {
+      "code": "301191",
+      "name": "菲菱科思",
+      "quantity": 100,
+      "cost_price": 129.4513,
+      "is_holding": true
+    },
+    {
+      "code": "002980",
+      "name": "和远气体",
+      "quantity": 1400,
+      "cost_price": 32.0325,
+      "is_holding": true
+    },
+    {
+      "code": "510230",
+      "name": "国泰证券ETF",
+      "quantity": 48000,
+      "cost_price": 1.2024,
+      "is_holding": true
+    }
+  ],
+  "watch_list": [],
+  "notifications": {
+    "dingtalk": {
+      "enabled": false,
+      "webhook": "https://oapi.dingtalk.com/robot/send?access_token=YOUR_ACCESS_TOKEN_HERE"
+    },
+    "wechat_work": {
+      "enabled": false,
+      "webhook": "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=YOUR_KEY_HERE"
+    },
+    "feishu": {
+      "enabled": true,
+      "webhook": "https://www.feishu.cn/flow/api/trigger-webhook/5cc43b76c4a28c225c8ab4e028198acb"
+    }
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "stocks": [
+    {
+      "code": "600000",
+      "name": "浦发银行",
+      "quantity": 1000,
+      "cost_price": 10.5,
+      "is_holding": true
+    },
+    {
+      "code": "000001",
+      "name": "平安银行",
+      "quantity": 500,
+      "cost_price": 15.8,
+      "is_holding": true
+    }
+  ],
+  "watch_list": [
+    {
+      "code": "601318",
+      "name": "中国平安"
+    }
+  ],
+  "notifications": {
+    "dingtalk": {
+      "enabled": true,
+      "webhook": "https://oapi.dingtalk.com/robot/send?access_token=YOUR_ACCESS_TOKEN_HERE"
+    },
+    "wechat_work": {
+      "enabled": false,
+      "webhook": "https://qyapi.weixin.qq.com/cgi-bin/webhook/send?key=YOUR_KEY_HERE"
+    }
+  }
+}
