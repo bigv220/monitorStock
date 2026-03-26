@@ -14,20 +14,13 @@
       "cost_price": 129.4513,
       "is_holding": true
     },
-    {
-      "code": "002980",
-      "name": "和远气体",
-      "quantity": 1400,
-      "cost_price": 32.0325,
-      "is_holding": true
-    },
-    {
-      "code": "510230",
-      "name": "国泰证券ETF",
-      "quantity": 48000,
-      "cost_price": 1.2024,
-      "is_holding": true
-    }
+     {
+       "code": "002980",
+       "name": "和远气体",
+       "quantity": 1400,
+       "cost_price": 32.8782,
+       "is_holding": true
+     }
   ],
   "watch_list": [],
   "notifications": {
@@ -41,7 +34,7 @@
     },
     "feishu": {
       "enabled": true,
-      "webhook": "https://www.feishu.cn/flow/api/trigger-webhook/5cc43b76c4a28c225c8ab4e028198acb"
+      "webhook": "https://open.feishu.cn/open-apis/bot/v2/hook/175b14ce-cd88-4973-bb52-bb152699e03f"
     }
   }
 }

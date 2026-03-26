@@ -1,6 +1,6 @@
 """
 Notifier Module
-Support DingTalk and WeChat Work robot notification
+Support DingTalk, WeChat Work and FeiShu robot notification
 """
 import requests
 import json
@@ -67,33 +67,41 @@ class WeChatWorkNotifier(BaseNotifier):
 
 
 class FeiShuNotifier(BaseNotifier):
-    """FeiShu (Lark) robot notifier"""
+    """FeiShu (Lark) robot notifier - support both custom bot and flow webhook"""
     def __init__(self, webhook_url: str):
         self.webhook_url = webhook_url
     
     def send(self, content: str) -> bool:
         """Send markdown message to FeiShu"""
         try:
-            data = {
-                "msg_type": "interactive",
-                "card": {
-                    "header": {
-                        "title": {
-                            "content": "股票持仓监控",
-                            "tag": "plain_text"
-                        }
-                    },
-                    "elements": [
-                        {
-                            "tag": "markdown",
-                            "content": content
-                        }
-                    ]
+            if "flow/api/trigger-webhook" in self.webhook_url:
+                # For flow webhook, send as simple json
+                data = {
+                    "text": content
                 }
-            }
+            else:
+                # For custom bot
+                data = {
+                    "msg_type": "interactive",
+                    "card": {
+                        "header": {
+                            "title": {
+                                "content": "股票持仓监控",
+                                "tag": "plain_text"
+                            }
+                        },
+                        "elements": [
+                            {
+                                "tag": "markdown",
+                                "content": content
+                            }
+                        ]
+                    }
+                }
             response = requests.post(self.webhook_url, json=data)
             result = response.json()
-            if result.get('code', 0) == 0:
+            # Flow webhook returns 0 for success
+            if result.get('code', 0) == 0 or result.get('StatusCode', 0) == 0:
                 return True
             else:
                 print(f"FeiShu send error: {result}")
@@ -119,6 +127,8 @@ class CompositeNotifier:
 def format_analysis_message(portfolio_data: Dict, analysis_results: Dict, 
                            watch_analysis: Dict = None, is_daily: bool = False) -> str:
     """Format analysis result as markdown message"""
+    if watch_analysis is None:
+        watch_analysis = {}
     now = datetime.now()
     title = "📊 股票持仓监控" + (" (每日汇总)" if is_daily else "")
     message = f"# {title}\n\n"
@@ -135,7 +145,7 @@ def format_analysis_message(portfolio_data: Dict, analysis_results: Dict,
     # Positions detail
     message += f"## 我的持仓\n"
     for pos in portfolio_data['positions']:
-        analysis = analysis_results.get(pos['code'], None)
+        analysis = analysis_results.get(pos['code'], None) if analysis_results else None
         pnl_emoji = "🟢" if pos['pnl'] >= 0 else "🔴"
         message += f"\n### {pos['name']} ({pos['code']})\n"
         message += f"价格: **{pos['current_price']:.2f}**  盈亏: {pnl_emoji} {pos['pnl']:.2f} ({pos['pnl_percent']:+.2f}%)\n"
@@ -151,8 +161,6 @@ def format_analysis_message(portfolio_data: Dict, analysis_results: Dict,
                 message += f"- {r}\n"
     
     # Watch list
-    if watch_analysis is None:
-        watch_analysis = {}
     if watch_analysis and len(watch_analysis) > 0:
         message += f"\n## 关注列表\n"
         for code, analysis in watch_analysis.items():
@@ -162,7 +170,7 @@ def format_analysis_message(portfolio_data: Dict, analysis_results: Dict,
             message += f"价格: {analysis['current_price']:.2f}  |  {analysis['trend']['description']}\n"
             message += f"{analysis['recommendation']['reasoning'][0] if analysis['recommendation']['reasoning'] else ''}\n"
     
-    message += f"\n\n---\n*基于 Al Brooks 价格行为学 小时级别分析*"
+    message += f"\n\n---\n*基于 Al Brooks 价格行为学*\n"
     return message
 
 
